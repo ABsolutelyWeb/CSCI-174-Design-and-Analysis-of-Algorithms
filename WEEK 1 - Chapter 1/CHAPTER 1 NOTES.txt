@@ -1,0 +1,65 @@
+===== CHAPTER 1 NOTES =====
+===== Algorithms Introduction =====
+
+QUESTIONS TO ANSWER:
+	
+	1. What are algorithms?
+	2. Why is the study of algorithms worth our time?
+	3. What is the role of algorithms relative to other technologies used in computers?
+
+	
+=== 1.1 ===
+	
+What is an algorithm?
+
+	- Any well-defined computational procedure that takes some values as input and produces
+	  some values as output.
+	  
+	- A sequence of computational steps that transform the input to output. They take some
+	  value, perform actions on those values, and output the result.
+	  
+	- It can also be looked at as a tool for solving well-defined computational problems.
+	
+	- For example, say we have a sorting algorithm that takes in an unsorted array. Say
+	  that array is arr = {31, 41, 59, 26, 41, 58}. The algorithm takes arr as input and
+	  then outputs the sorted array as {26, 31, 41, 41, 58, 59}.
+	
+		- In this case, arr is an instance of a problem. The input can be any array of type
+		  int.
+		  
+	- An algorithm is correct if for every valid input it can produce a valid result or it 
+	  can handle errors.
+	  
+
+What sorts of problems can algorithms solve?
+
+	- Sorting, Human Genome Project, Internet searches, electronic commerce, manufacturing, etc.
+	
+
+Data Structures
+
+	- A way to store and organize data in order to facilitate access and modifications.
+	
+	
+=== 1.2 Algorithms as a Technology ===
+
+3 things to keep in mind when designing algorithms:
+
+	1. Space in memory (might be inexpensive, but isn't free)
+	2. Computing time (bounded resource)
+	
+
+Efficiency
+	
+	- Different algorithms used for the same problem will likely vary in efficiency. 
+	- Let's examine Merge Sort and Insertion Sort. Both are excellent for sorting, but one is
+	  better than the other depending on input size. For example, although insertion sort 
+	  usually runs faster than merge sort for small input sizes, once the input size n becomes 
+	  large enough, merge sort’s advantage of lg n vs. n will be more apparent.
+
+	  
+Algorithms and technologies
+
+	- Algorithms are at the core of most technologies used in contemporary computers.
+	
+
