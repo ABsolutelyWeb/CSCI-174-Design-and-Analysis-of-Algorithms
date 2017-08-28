@@ -1,0 +1,6 @@
+- Insertion sort
+- growth of functions
+	- Big O notation (better)
+	- Omega (best case)
+	- Theta
+	- Little o (might be better)
