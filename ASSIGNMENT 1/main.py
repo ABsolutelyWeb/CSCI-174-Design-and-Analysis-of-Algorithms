@@ -21,23 +21,23 @@ class Coordinate:
     # and "self" works the same way as "this" works in Java. It is basically
     # representing an instance of the object. So "self.x" and "self.y" both
     # represent coordinates of a single point for whatever Coordinate object that
-    # we create.	
+    # we create.
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
-		
+
 # Each line consists of two pairs of points. Given that we have no idea how many
 # lines our input file will have, we must create a class to create as many
 # instances of a line for however many lines as needed.
 class Line:
-	# This is our Line constructor. i represents the line label
-    # a represents the lines first coordinate 
-    # while b represents the lines second coordinates.
-    def __init__(self, i, a, b):
-        self.i = i
-        self.a = a
-        self.b = b
+    # This is our Line constructor. index represents which position a given line 
+    # is in relative to the other, x1y1 represents the lines first coordinate 
+    # while x2y2 represents the lines second coordinates.
+    def __init__(self, index, x1y1, x2y2):
+        self.index = index
+        self.x1y1 = x1y1
+        self.x2y2 = x2y2
 
 
 # The "ccw" and "intersect" functions were taken from Bryce Boe. The article can
@@ -61,133 +61,162 @@ def ccw(A, B, C):
 # RETURN TYPE: BOOLEAN
 def intersect(A, B, C, D):
     return ccw(A,C,D) != ccw(B,C,D) and ccw(A,B,C) != ccw(A,B,D)   # Returns a true or false
-
+    
 
 # Read, parse, extract information, and store information into the lines list.
-# RETURN TYPE: lines LIST of objects	
+# RETURN TYPE: lines LIST of objects
 def get_lines(file_name):
-    lines = []						# Allocate lines variable for empty list
-    with open(file_name, 'r') as f:		# Open will return a file object with "r" or read-only priviledge.
-        # Read file line by line
-        for line in f:
-            # if line not empty
-            if line:
+    lines = []                                # Allocate lines variable for empty list
+    with open(file_name, 'r') as f:           # Open will return a file object with "r" or read-only priviledge.
+        # Read file row by row
+        for row in f:
+            # if row is not empty
+            if row:
                 # split row by :
                 # For example, say s = "1: ([37.788353, -122.387695], [37.829853, -122.294312])"
                 # then if we do sp = s.split(':')
                 # we will get print(sp) >>> ['1', ' ([37.788353, -122.387695], [37.829853, -122.294312])']
-                line_split = line.split(':')
-				
+                row_split = row.split(':')
+                
                 # line number
                 # In the above example, "lineNumber" here would be 1.
-                br = line_split[0]
-				
+                lineNumber = row_split[0]
+                
                 # coordinates
-				# In the above example, "rest" here would be ([37.788353, -122.387695], [37.829853, -122.294312]).
-                rest = line_split[1]
+                # In the above example, "rest" here would be ([37.788353, -122.387695], [37.829853, -122.294312]).
+                everythingAfterLineNum = row_split[1]
 
                 # split coordinates and convert them from string to float
-                # Store the raw points (without parentheses/brackets and other characters)
+                # Store the raw points (without parentheses/brackets and other characters) inside the points list. 
                 points = []
-				
-				# In the above example, "rest" here would be ([37.788353, -122.387695], [37.829853, -122.294312])
+                
+                # In the above example, "rest" here would be ([37.788353, -122.387695], [37.829853, -122.294312])
                 # We will split by the comma and get ['([37.788353', '-122.387695]', '[37.829853', '-122.294312])']
                 # However, we are using a regular expression to replace the insignificant characters with ''.
                 # Therefore, we will end up with ['37.788353', '-122.387695', '37.829853', '-122.294312']
-                for pt in rest.split(','):
+                for pt in everythingAfterLineNum.split(','):
                     new_point = re.sub(r'[^0-9.-]', '', pt)
-					# Since the coordinates are strings, we need to typcast them into floats.
+                    
+                    # Since the coordinates are strings, we need to typcast them into floats.
                     float_new_point = float(new_point)
-					# Once the coordinates have been typecasted into floats, we will push them onto our
+                    
+                    # Once the coordinates have been typecasted into floats, we will push them onto our
                     # points list which, given the above example, would like this:
                     # [37.788353, -122.387695, 37.829853, -122.294312]
                     points.append(float_new_point)
                 
-				# Now that we have extracted a line's coordinates into a list, 
+                # Now that we have extracted a line's coordinates into a list, 
                 # we need to create the Coordinate objects. Two per line.
-                # a: x1 and y1
-                # b: x2 and y2
-                a = Coordinate(points[0], points[1])
-                b = Coordinate(points[2], points[3])
+                # x1y1: x1 and y1
+                # x2y2: x2 and y2
+                x1y1 = Coordinate(points[0], points[1])  # Ex. 37.788353, -122.387695
+                x2y2 = Coordinate(points[2], points[3])  # Ex. 37.829853, -122.294312
                 
-				# A line consists of two coordinates. We have made 2 Coordinate
+                # A line consists of two coordinates. We have made 2 Coordinate
                 # objects. We will create a Line object and then assign the 2
                 # Coordinate objects to this Line object.
-                br = Line(int(br), a, b)
-				# Store every lineNumber AKA List objects into the lines list.
-                lines.append(br)
-    return lines	# Return the list of line numbers
+                lineNumber = Line(int(lineNumber), x1y1, x2y2)
+                
+                # Store every lineNumber AKA List objects into the lines list.
+                lines.append(lineNumber)
+    return lines  # Return the list of line numbers
+
 
 # This function checks every line and counts the number of intersections.
 # RETURN TYPE: count INTEGER
-def check_line(check_line, lines):
+def check_line(lineNum, lines):
     count = 0
+    
     for line in lines:
-        # if ids of lines not eaqual
-        if check_line.i != line.i:
+    
+        # if ids of lines not equal
+        if lineNum.index != line.index:
+    
             # finding intersections
-            if intersect(check_line.a, check_line.b, line.a, line.b):
-                count += 1
+            if intersect(lineNum.x1y1, lineNum.x2y2, line.x1y1, line.x2y2):
+                count = count + 1
+    
     return count
+
 
 # Use the above function to find all lines that don't have intersections.
 # RETURN TYPE: lines_without_intersections LIST
 def check_intersections(lines):
     
-	# List for holding every line that doesn't have intersection(s).
+    # List for holding every line that doesn't have intersection(s).
     lines_without_intersections = []
-	
-	# The lines list must not be empty.
+    
+    # The lines list must not be empty.
     while len(lines) > 0:
-		
-		# Look for intersections
+        max_intersections = 0
+        max_line = None  # Empty or no value here
+    
+        # Look for intersections.
         for line in lines:
             count_intersection = check_line(line, lines)
-			
-			# If there are no intersections found for a given line, add the line 
+    
+            # If there are no intersections found for a given line, add the line 
             # number to the "lines_without_intersections" list.
             if count_intersection == 0:
                 lines_without_intersections.append(line)
-		
-			# We ignore lines that have the greatest number of intersections.
-            else:
-                lines.remove(line)
-		
-		# In our list of lines that don't have intersections, if that specific line
-		# exists in our lines list argument, then we take it off and then move onto
-		# the next line.
+    
+            # We ignore lines that have the greatest number of intersections.
+            elif count_intersection >= max_intersections:
+                max_intersections = count_intersection
+                max_line = line
+    
+        # If a value exists for max_line, then that means we need to remove the
+        # line from out list that is not valid in the solution.
+        if max_line:
+            lines.remove(max_line)
+    
+        # As we are iterating through the lines_without_intersections list, if we
+		# find a line that is also in the lines argument, then we remove it and 
+		# continue to iterate.
         for line in lines_without_intersections:
             if line in lines:
                 lines.remove(line)
     return lines_without_intersections
 
 
+
 # Take in the list of lines and then for each valid line, print out the line
-# number followed by a space.	
-def print_result(lines):
-	# Go into the lines list and extract only the indices. Then store these
-	# indices inside a new list called lines.
-    lines = [line.i for line in lines]
-	
-	# Sort the list before iterating through and printing each element.
-    lines.sort()
-	
-    for line in lines:
-        print(line, end=' ')
+# number followed by a space.
+def print_result(lines_list):
+    if len(lines_list) == 0:
+        print("Input file is blank.")
+
+    # Insertion Sort
+    for index in range(1, len(lines_list)):
+        value = lines_list[index].index
+        i = index - 1
+        while i >= 0:
+            if value < lines_list[i].index:
+                lines_list[i+1].index = lines_list[i].index
+                lines_list[i].index = value
+                i = i - 1
+            else:
+                break
+                    
+	# Take the sorted list and then print elements one-by-one
+	# followed by a space.
+    for line in lines_list:
+        print(line.index, end=' ')
+    print("")
 
 
 # This is the entire program. Everything is happening here. The if statement
 # makes it so the source is only ran as a standalone script.
 if __name__ == '__main__':
-	# Program will take a single file argument.
+    # Program will take a single file argument.
     file_name = sys.argv[1]
-	
-	# Get the lines from the file and store them.
+    
+    # Get the lines from the file and store them.
     lines_from_file = get_lines(file_name)
-	
-	# From the lines you extracted from the source code, find all the ones that
+    
+    # From the lines you extracted from the source code, find all the ones that
     # don't have intersections.
-    lines_without_intersections = check_intersections(lines_from_file)
-	
-	# Print the largest set of line numbers where there exists no intersection.
+    lines_without_intersections = check_intersections(lines_from_file) 
+    
+    # Print the largest set of line numbers where there exists no intersection.
     print_result(lines_without_intersections)
