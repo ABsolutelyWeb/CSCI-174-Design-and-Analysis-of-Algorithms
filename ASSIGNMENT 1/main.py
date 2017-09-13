@@ -122,7 +122,7 @@ def get_lines(file_name):
     return lines  # Return the list of line numbers
 
 
-# This function checks every line and counts the number of intersections.
+# This function checks every line and counts the number of intersections each line has.
 # RETURN TYPE: count INTEGER
 def check_line(lineNum, lines):
     count = 0
@@ -148,11 +148,15 @@ def check_intersections(lines):
     
     # The lines list must not be empty.
     while len(lines) > 0:
+		# Used to find the high intersection for a line in a set.
         max_intersections = 0
+		
+		# Once we have found that line, store it in this variable.
         max_line = None  # Empty or no value here
     
         # Look for intersections.
         for line in lines:
+			# Check each line and store its # of intersections in this variable.
             count_intersection = check_line(line, lines)
     
             # If there are no intersections found for a given line, add the line 
@@ -160,13 +164,13 @@ def check_intersections(lines):
             if count_intersection == 0:
                 lines_without_intersections.append(line)
     
-            # We ignore lines that have the greatest number of intersections.
+            # Every time we find a line that has a greater number of intersections, we
+			# store it in the max variables.
             elif count_intersection >= max_intersections:
                 max_intersections = count_intersection
                 max_line = line
     
-        # If a value exists for max_line, then that means we need to remove the
-        # line from out list that is not valid in the solution.
+        # We remove the line that has the max number of intersections.
         if max_line:
             lines.remove(max_line)
     
@@ -187,6 +191,10 @@ def print_result(lines_list):
         print("Input file is blank.")
 
     # Insertion Sort
+	# lines_list.sort() was not working for me and I couldn't figure out why
+	# beause it worked in Python 2. I think Python 3 got confused as to how to
+	# sort the objects. I used insertion sort because that's what we went over
+	# in class and that's what I understand. Probably a more efficient way.
     for index in range(1, len(lines_list)):
         value = lines_list[index].index
         i = index - 1
