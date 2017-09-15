@@ -176,7 +176,8 @@ def check_intersections(lines):
     
         # As we are iterating through the lines_without_intersections list, if we
 		# find a line that is also in the lines argument, then we remove it and 
-		# continue to iterate.
+		# continue to iterate. The purpose of this loop is to also get us out of
+		# the parent infinite while loop.
         for line in lines_without_intersections:
             if line in lines:
                 lines.remove(line)
@@ -194,7 +195,7 @@ def print_result(lines_list):
 	# lines_list.sort() was not working for me and I couldn't figure out why
 	# beause it worked in Python 2. I think Python 3 got confused as to how to
 	# sort the objects. I used insertion sort because that's what we went over
-	# in class and that's what I understand. Probably a more efficient way.
+	# in class and that's what I understood fairly well.
     for index in range(1, len(lines_list)):
         value = lines_list[index].index
         i = index - 1
