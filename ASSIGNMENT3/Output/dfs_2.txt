@@ -1,0 +1,15 @@
+Discover/Finish: 1 : 1 18
+Discover/Finish: 2 : 4 15
+Discover/Finish: 3 : 5 14
+Discover/Finish: 4 : 9 10
+Discover/Finish: 5 : 8 11
+Discover/Finish: 6 : 7 12
+Discover/Finish: 7 : None None
+Discover/Finish: 8 : 2 17
+Discover/Finish: 9 : 3 16
+Discover/Finish: 10 : 6 13
+Tree: [(1, 8), (8, 9), (9, 2), (2, 3), (3, 10), (10, 6), (6, 5), (5, 4)]
+Back: [(2, 1), (9, 1), (4, 8), (3, 9), (4, 10), (5, 10), (6, 10)]
+Forward: [(2, 5), (3, 4)]
+Cross: [(7, 9)]
+Vertices in topological order: [1, 8, 9, 2, 3, 10, 6, 5, 4]
